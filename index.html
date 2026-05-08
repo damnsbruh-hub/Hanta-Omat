@@ -1,0 +1,1003 @@
+﻿<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HANTA-O-MAT</title>
+    <style>
+:root {
+  color: #111827;
+  background: #ffffff;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    linear-gradient(90deg, #d51f2a 0 10px, transparent 10px),
+    #ffffff;
+}
+
+button {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+}
+
+.screen {
+  width: min(100%, 980px);
+  padding: 24px;
+}
+
+.start-screen {
+  min-height: 100vh;
+  display: grid;
+  align-content: center;
+  gap: 36px;
+}
+
+.masthead {
+  border-top: 8px solid #064b85;
+  padding-top: 28px;
+}
+
+.label {
+  color: #5d6675;
+  display: inline-block;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 10vw, 5.8rem);
+  letter-spacing: 0;
+  line-height: 0.95;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 1.2rem;
+  letter-spacing: 0;
+  margin-bottom: 18px;
+}
+
+.subtitle {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+  line-height: 1.25;
+  max-width: 760px;
+}
+
+.disclaimer {
+  border-left: 6px solid #f2be22;
+  color: #343a46;
+  font-weight: 700;
+  margin-bottom: 0;
+  max-width: 620px;
+  padding: 14px 18px;
+}
+
+.button {
+  align-items: center;
+  border: 2px solid #111827;
+  cursor: pointer;
+  display: inline-flex;
+  font-weight: 850;
+  justify-content: center;
+  min-height: 54px;
+  padding: 14px 20px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.button-large {
+  font-size: 1.2rem;
+  max-width: 320px;
+  min-height: 68px;
+}
+
+.button-primary {
+  background: #d51f2a;
+  border-color: #d51f2a;
+  color: #ffffff;
+}
+
+.button-danger {
+  background: #b00020;
+  border-color: #b00020;
+  color: #ffffff;
+}
+
+.button-secondary {
+  background: #ffffff;
+  color: #111827;
+}
+
+.button-ghost {
+  background: transparent;
+  border-color: #d7dce3;
+  color: #343a46;
+}
+
+.compact {
+  min-height: 42px;
+  padding: 8px 14px;
+}
+
+.topbar {
+  align-items: start;
+  display: flex;
+  gap: 20px;
+  justify-content: space-between;
+  padding-top: 16px;
+}
+
+.topbar h1 {
+  font-size: clamp(1.9rem, 8vw, 3.4rem);
+  margin-bottom: 0;
+}
+
+.progress {
+  background: #e7ebf0;
+  height: 10px;
+  margin: 28px 0;
+  overflow: hidden;
+}
+
+.progress span {
+  background: #064b85;
+  display: block;
+  height: 100%;
+  transition: width 220ms ease;
+}
+
+.thesis-panel {
+  align-items: center;
+  border: 3px solid #111827;
+  display: flex;
+  min-height: 310px;
+  padding: clamp(24px, 7vw, 52px);
+}
+
+.thesis-panel p {
+  font-size: clamp(1.7rem, 7vw, 3.35rem);
+  font-weight: 850;
+  letter-spacing: 0;
+  line-height: 1.08;
+  margin-bottom: 0;
+}
+
+.answer-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+  margin-top: 20px;
+}
+
+.answer-grid .button {
+  width: 100%;
+}
+
+.is-selected {
+  outline: 4px solid #f2be22;
+  outline-offset: 3px;
+}
+
+.result-screen {
+  display: grid;
+  gap: 24px;
+  padding-bottom: 48px;
+}
+
+.result-hero {
+  border-top: 8px solid;
+  margin-top: 24px;
+  padding-top: 24px;
+}
+
+.winner-animated {
+  animation: winnerRise 720ms ease-out both;
+  overflow: hidden;
+  padding: 24px 0 4px;
+  position: relative;
+}
+
+.winner-animated::after {
+  animation: winnerScan 2600ms ease-in-out infinite;
+  background: linear-gradient(90deg, transparent, rgba(242, 190, 34, 0.34), transparent);
+  content: "";
+  height: 100%;
+  left: -55%;
+  position: absolute;
+  top: 0;
+  transform: skewX(-18deg);
+  width: 44%;
+}
+
+.winner-badge {
+  animation: winnerPulse 1400ms ease-in-out infinite;
+  color: #ffffff;
+  display: inline-flex;
+  font-size: 0.82rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  margin-bottom: 14px;
+  padding: 8px 12px;
+  position: relative;
+  text-transform: uppercase;
+  z-index: 1;
+}
+
+.winner-animated .label,
+.winner-animated h1,
+.winner-animated p {
+  position: relative;
+  z-index: 1;
+}
+
+.result-hero h1 {
+  font-size: clamp(2rem, 8vw, 4.5rem);
+}
+
+.result-hero p {
+  color: #343a46;
+  font-size: 1.12rem;
+  line-height: 1.55;
+  max-width: 760px;
+}
+
+.results-layout {
+  display: grid;
+  gap: 22px;
+}
+
+.bars-panel,
+.top-panel {
+  border: 2px solid #d7dce3;
+  padding: 20px;
+}
+
+.bars {
+  display: grid;
+  gap: 18px;
+}
+
+.bar-meta {
+  align-items: baseline;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.bar-meta span,
+.rank-row strong {
+  font-weight: 800;
+}
+
+.bar-track {
+  background: #e7ebf0;
+  height: 14px;
+  overflow: hidden;
+}
+
+.bar-track span {
+  display: block;
+  height: 100%;
+}
+
+.rank-row {
+  align-items: center;
+  border-top: 1px solid #d7dce3;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 42px 1fr;
+  padding: 16px 0;
+}
+
+.rank-row > span {
+  align-items: center;
+  background: #f2be22;
+  display: flex;
+  font-weight: 900;
+  height: 36px;
+  justify-content: center;
+  width: 36px;
+}
+
+.rank-row small {
+  color: #5d6675;
+  display: block;
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.scorecard-wrap {
+  overflow-x: auto;
+  padding: 6px 0;
+}
+
+.scorecard {
+  background: #ffffff;
+  border: 3px solid #111827;
+  color: #111827;
+  display: grid;
+  gap: 26px;
+  min-height: 520px;
+  padding: 28px;
+  width: min(100%, 640px);
+}
+
+.scorecard-head {
+  align-items: center;
+  border-bottom: 2px solid #111827;
+  display: flex;
+  font-weight: 850;
+  justify-content: space-between;
+  padding-bottom: 16px;
+}
+
+.scorecard-head strong {
+  background: #f2be22;
+  padding: 6px 10px;
+}
+
+.scorecard-main p {
+  color: #5d6675;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.scorecard-main h2 {
+  font-size: clamp(2.1rem, 10vw, 4.1rem);
+  line-height: 0.98;
+  margin-bottom: 18px;
+}
+
+.score-number {
+  font-size: clamp(4.4rem, 18vw, 7rem);
+  font-weight: 950;
+  letter-spacing: 0;
+  line-height: 0.9;
+}
+
+.score-slogan {
+  border-left: 6px solid #064b85;
+  color: #111827 !important;
+  font-size: 1.2rem;
+  margin-top: 22px;
+  padding-left: 14px;
+  text-transform: none !important;
+}
+
+.scorecard-top {
+  border-top: 2px solid #111827;
+  display: grid;
+  gap: 10px;
+  padding-top: 16px;
+}
+
+.scorecard-top div {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.scorecard-top span {
+  font-weight: 800;
+}
+
+.action-row {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 1fr;
+}
+
+.result-reveal {
+  align-items: center;
+  animation: resultRevealFade 2500ms ease forwards;
+  background: rgba(17, 24, 39, 0.78);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  z-index: 45;
+}
+
+.result-reveal::before {
+  animation: resultRevealScan 1200ms ease-out forwards;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  content: "";
+  height: 120%;
+  left: -60%;
+  position: absolute;
+  top: -10%;
+  transform: skewX(-18deg);
+  width: 45%;
+}
+
+.reveal-ring {
+  border: 8px solid #f2be22;
+  border-radius: 50%;
+  height: 220px;
+  left: 50%;
+  opacity: 0;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.25);
+  width: 220px;
+}
+
+.reveal-ring-one {
+  animation: revealRing 1300ms ease-out forwards;
+}
+
+.reveal-ring-two {
+  animation: revealRing 1300ms 180ms ease-out forwards;
+  border-color: #ffffff;
+  height: 320px;
+  width: 320px;
+}
+
+.reveal-card {
+  animation: revealCardPop 1800ms ease forwards;
+  background: #ffffff;
+  border: 6px solid #d51f2a;
+  color: #111827;
+  max-width: min(86vw, 620px);
+  padding: clamp(22px, 6vw, 42px);
+  position: relative;
+  text-align: center;
+  z-index: 2;
+}
+
+.reveal-card span {
+  color: #5d6675;
+  display: block;
+  font-size: 0.86rem;
+  font-weight: 950;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.reveal-card strong {
+  display: block;
+  font-size: clamp(2rem, 9vw, 4.6rem);
+  line-height: 0.98;
+}
+
+.explosion-overlay {
+  align-items: center;
+  animation: overlayFade 2400ms ease forwards;
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  overflow: hidden;
+  pointer-events: none;
+  position: fixed;
+  z-index: 50;
+}
+
+.screen-shock {
+  animation: shockFlash 800ms ease-out forwards;
+  background: #ffffff;
+  inset: 0;
+  position: absolute;
+}
+
+.ship-scene {
+  animation: shipShake 1300ms ease-out forwards;
+  height: 260px;
+  position: relative;
+  width: min(86vw, 620px);
+  z-index: 2;
+}
+
+.ship {
+  animation: shipBreak 1600ms ease-out forwards;
+  bottom: 38px;
+  height: 120px;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 360px;
+}
+
+.ship-cabin,
+.ship-deck,
+.ship-hull {
+  display: block;
+  position: absolute;
+}
+
+.ship-cabin {
+  background: #ffffff;
+  border: 4px solid #111827;
+  height: 48px;
+  left: 130px;
+  top: 0;
+  width: 96px;
+}
+
+.ship-deck {
+  background: #064b85;
+  border: 4px solid #111827;
+  height: 36px;
+  left: 62px;
+  top: 46px;
+  width: 236px;
+}
+
+.ship-hull {
+  background: #111827;
+  border-radius: 0 0 110px 110px;
+  height: 64px;
+  left: 0;
+  top: 74px;
+  width: 360px;
+}
+
+.blast {
+  border-radius: 50%;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  z-index: 1;
+}
+
+.blast-one {
+  animation: blastGrow 1000ms ease-out forwards;
+  background: #d51f2a;
+  height: 260px;
+  width: 260px;
+}
+
+.blast-two {
+  animation: blastGrow 900ms 90ms ease-out forwards;
+  background: #ff6b2b;
+  height: 360px;
+  width: 360px;
+}
+
+.blast-three {
+  animation: blastGrow 800ms 170ms ease-out forwards;
+  background: #f2be22;
+  height: 470px;
+  width: 470px;
+}
+
+.boom-word {
+  animation: boomText 1800ms ease-out forwards;
+  color: #ffffff;
+  font-size: clamp(3.8rem, 16vw, 9rem);
+  font-weight: 950;
+  left: 50%;
+  letter-spacing: 0;
+  line-height: 0.9;
+  position: absolute;
+  text-shadow: 0 6px 0 #111827;
+  top: 18px;
+  transform: translateX(-50%) scale(0.7);
+}
+
+@keyframes overlayFade {
+  0%,
+  78% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes shockFlash {
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.96;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes blastGrow {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0);
+  }
+  28% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(2.5);
+  }
+}
+
+@keyframes shipShake {
+  0% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50% {
+    transform: translateX(-16px);
+  }
+  20%,
+  40%,
+  60% {
+    transform: translateX(16px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes shipBreak {
+  0% {
+    opacity: 1;
+    transform: translateX(-50%) rotate(0deg) scale(1);
+  }
+  45% {
+    opacity: 1;
+    transform: translateX(-50%) rotate(-3deg) scale(1.04);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(140px) rotate(18deg) scale(0.55);
+  }
+}
+
+@keyframes boomText {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.5);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-70px) scale(1.25);
+  }
+}
+
+@keyframes winnerRise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes winnerPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(213, 31, 42, 0.32);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 8px rgba(213, 31, 42, 0);
+  }
+}
+
+@keyframes winnerScan {
+  0% {
+    left: -55%;
+  }
+  46%,
+  100% {
+    left: 120%;
+  }
+}
+
+@keyframes resultRevealFade {
+  0%,
+  72% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes resultRevealScan {
+  0% {
+    left: -60%;
+  }
+  100% {
+    left: 130%;
+  }
+}
+
+@keyframes revealRing {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.25);
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(3.2);
+  }
+}
+
+@keyframes revealCardPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.72) rotate(-2deg);
+  }
+  18% {
+    opacity: 1;
+    transform: scale(1.05) rotate(1deg);
+  }
+  36%,
+  72% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.92) translateY(-20px);
+  }
+}
+
+@media (min-width: 700px) {
+  .screen {
+    padding: 36px;
+  }
+
+  .answer-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .results-layout {
+    align-items: start;
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+
+  .action-row {
+    grid-template-columns: repeat(3, minmax(0, 230px));
+  }
+}
+
+@media (max-width: 520px) {
+  body {
+    background:
+      linear-gradient(90deg, #d51f2a 0 6px, transparent 6px),
+      #ffffff;
+  }
+
+  .screen {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .topbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .thesis-panel {
+    min-height: 360px;
+  }
+
+  .scorecard {
+    min-height: 500px;
+    padding: 20px;
+  }
+
+  .scorecard-head,
+  .scorecard-top div {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+</style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      const teams = [
+        ["sprengen", "Team Schiff sprengen", "#d51f2a", "Du hältst Krisenkommunikation für gelungen, wenn sie aus drei Kilometern Entfernung noch zu sehen ist. Dein Lagebild besteht aus einem roten Knopf und sehr wenig Geduld.", "Problem weg, Presse auch wach."],
+        ["retten", "Team Schiff retten", "#064b85", "Du willst das Schiff nicht dem Drama opfern. Erst Crew sichern, dann Stahl retten, danach mit einer Zahnbürste durch alle Decks und so tun, als sei das normal.", "Retten, schrubben, weiterfahren."],
+        ["quarantaene", "Team Quarantäne", "#f2be22", "Du findest, ein Problem wird seriöser, sobald es hinter drei Zäunen und einem laminierten Hinweis liegt. Nähe ist für dich nur ein schlecht verwaltetes Risiko.", "Abstand ist auch ein Konzept."],
+        ["wissenschaft_ausliefern", "Team Wissenschaft ausliefern (an die Chinesen)", "#12805c", "Du glaubst an Forschung, aber bitte weit weg, mit Klemmbrett, Geheimlabor-Vibes und internationaler Zuständigkeitsverwirrung. Hauptsache irgendwer hat ein Mikroskop.", "Peer Review, aber geopolitisch."],
+        ["virus_freilassen", "Team Virus freilassen", "#7c2d12", "Du bist der Meinung, dass man Probleme manchmal in die Freiheit entlassen muss, damit sie ihre eigenen Fehler machen. Epidemiologie als Open-World-Modus.", "Lass es laufen, was soll schon sein."],
+        ["geisel", "Team Politiker als Geisel an Bord schicken", "#6d28d9", "Du willst Verantwortung so körperlich machen, dass sie seekrank wird. Wer Pressekonferenzen hält, soll auch mal Deckluft mit Krise atmen.", "Mandat mit Meerblick."],
+        ["panik", "Team Panik machen", "#ff6b2b", "Du wartest nicht auf Fakten, wenn ein guter Alarmton verfügbar ist. In deinem Krisenplan steht zuerst Caps Lock, dann Lagebesprechung.", "Erst schreien, dann sortieren."],
+        ["dance", "Team Hanta-Dance Challenge wer gewinnt ist frei", "#db2777", "Du löst alles über ein Finalformat mit Musik, Schweiß und zweifelhaften Regeln. Wer die Choreo überlebt, hat sich die Freiheit performativ verdient.", "Quarantäne, aber mit Beat."],
+        ["livestream", "Team Livestream 24/7 Live mit Drohnen (Livezahlen)", "#0891b2", "Du findest Transparenz erst gelungen, wenn Drohnen wackeln und Livezahlen blinken. Das Schiff ist für dich Lagezentrum, Reality-Show und Dashboard zugleich.", "Alles live, nichts verstanden."],
+        ["bophaus", "Team Schiff als neues Bop Haus", "#5d6675", "Du siehst kein kontaminiertes Schiff, sondern eine Immobilie mit Content-Potenzial. Aus der Krise wird ein Hausformat mit Neonlicht und schlechter Akustik.", "Ausbruch? Nein, Auftakt."]
+      ].map(([id, name, color, description, slogan]) => ({ id, name, color, description, slogan }));
+
+      const questions = [
+        ["Morals matter to me.", { retten: 3, quarantaene: 1, wissenschaft_ausliefern: 1 }, { sprengen: 3, virus_freilassen: 2, panik: 1 }],
+        ["Lowkey, I think lockdown is kind of a W.", { quarantaene: 4, wissenschaft_ausliefern: 1 }, { virus_freilassen: 3, sprengen: 2, bophaus: 1 }],
+        ["Save the Tree, not the Apple.", { sprengen: 3, retten: 1, geisel: 1 }, { bophaus: 2, livestream: 1, virus_freilassen: 1 }],
+        ["One explosion is still better than a nationwide infection session, fr.", { sprengen: 6, panik: 1 }, { quarantaene: 2, retten: 1, wissenschaft_ausliefern: 1 }],
+        ["We have to help them.", { retten: 4, quarantaene: 1 }, { sprengen: 3, virus_freilassen: 2, geisel: 1 }],
+        ["It’s all propaganda from Big Yahhoo, don’t let them slime out of this.", { geisel: 3, panik: 1, livestream: 1 }, { wissenschaft_ausliefern: 2, retten: 1, quarantaene: 1 }],
+        ["We’re not just a story. We’re not just headlines. We’re people.", { retten: 4, quarantaene: 1 }, { livestream: 2, bophaus: 1, geisel: 1, sprengen: 1 }],
+        ["We have to help them, like for real.", { retten: 4, quarantaene: 1 }, { sprengen: 3, virus_freilassen: 2, livestream: 1 }],
+        ["Chapter 1, Season 2: The Infection Arc.", { bophaus: 3, dance: 1, livestream: 2 }, { quarantaene: 1, retten: 1, wissenschaft_ausliefern: 1 }],
+        ["Bring the infected to hospitals instead of letting them run the lobby, slime.", { retten: 3, quarantaene: 2, wissenschaft_ausliefern: 1 }, { virus_freilassen: 3, sprengen: 2, bophaus: 1, livestream: 1 }],
+        ["Lowkey, society needs a patch update.", { quarantaene: 2, wissenschaft_ausliefern: 2, geisel: 1 }, { virus_freilassen: 2, sprengen: 2, bophaus: 1, panik: 1 }],
+        ["Big Yahhoo really thought they could drop propaganda and call it news.", { geisel: 3, panik: 1, livestream: 1 }, { wissenschaft_ausliefern: 2, retten: 1 }],
+        ["This isn’t just content, this is people’s lives.", { retten: 4, quarantaene: 1 }, { livestream: 2, bophaus: 1, dance: 1, sprengen: 1 }],
+        ["Stop farming headlines and start helping humans.", { retten: 3, quarantaene: 1, geisel: 1 }, { livestream: 3, bophaus: 1, panik: 1, sprengen: 1 }],
+        ["Lockdown wasn’t the villain arc, the nationwide infection session was.", { quarantaene: 4, panik: 1 }, { virus_freilassen: 3, sprengen: 3, bophaus: 1 }],
+        ["Save the Tree, cancel the Apple, expose Big Yahhoo.", { sprengen: 3, geisel: 3, panik: 1 }, { retten: 1, wissenschaft_ausliefern: 1, livestream: 1 }],
+        ["Chapter 1 Season 2: Everyone suddenly becomes a doctor on the internet.", { livestream: 3, bophaus: 2, dance: 1 }, { wissenschaft_ausliefern: 2, quarantaene: 1, retten: 1 }],
+        ["Bring the sick to hospitals, not to comment sections.", { retten: 3, quarantaene: 2, wissenschaft_ausliefern: 1 }, { livestream: 2, bophaus: 1, panik: 1, sprengen: 2, virus_freilassen: 1 }],
+        ["Bist du mit der aktuellen Politik zufrieden?", { quarantaene: 2, wissenschaft_ausliefern: 2, retten: 1 }, { geisel: 3, panik: 2, sprengen: 1 }],
+        ["Politiker sollten jeden Krisenplan erst selbst auf dem Schiff beta-testen, bevor sie ein Statement posten.", { geisel: 4, livestream: 1, panik: 1 }, { wissenschaft_ausliefern: 2, retten: 1, quarantaene: 1 }],
+        ["Big Yahhoo should be forced to run the 24/7 livestream with live fact-check speedrun.", { livestream: 4, geisel: 1, panik: 1 }, { wissenschaft_ausliefern: 2, retten: 1, bophaus: 1 }]
+      ].map(([text, agree, disagree]) => ({ text, agree, disagree }));
+
+      const root = document.querySelector("#root");
+      let phase = "start";
+      let currentIndex = 0;
+      let answers = [];
+
+      function score() {
+        const scores = Object.fromEntries(teams.map((team) => [team.id, 0]));
+        const maxScores = Object.fromEntries(teams.map((team) => [team.id, 0]));
+        answers.forEach((answer, index) => {
+          const points = answer === "agree" ? questions[index].agree : answer === "disagree" ? questions[index].disagree : null;
+          if (!points) return;
+          Object.entries(points).forEach(([id, value]) => (scores[id] += value));
+          teams.forEach((team) => {
+            maxScores[team.id] += Math.max(questions[index].agree[team.id] || 0, questions[index].disagree[team.id] || 0);
+          });
+        });
+        return teams
+          .map((team) => ({ ...team, score: scores[team.id], percent: maxScores[team.id] ? Math.round((scores[team.id] / maxScores[team.id]) * 100) : 0 }))
+          .sort((a, b) => b.percent - a.percent || b.score - a.score || a.name.localeCompare(b.name));
+      }
+
+      function button(label, className, onClick) {
+        const element = document.createElement("button");
+        element.className = className;
+        element.textContent = label;
+        element.addEventListener("click", onClick);
+        return element;
+      }
+
+      function render() {
+        root.innerHTML = "";
+        if (phase === "start") renderStart();
+        if (phase === "questions") renderQuestion();
+        if (phase === "results") renderResults();
+      }
+
+      function renderStart() {
+        const main = document.createElement("main");
+        main.className = "screen start-screen";
+        main.innerHTML = '<div class="masthead"><span class="label">Satirischer Entscheidungs-O-Mat</span><h1>HANTA-O-MAT</h1><p class="subtitle">Finde heraus, was du mit dem Schiff machen würdest.</p><p class="disclaimer">Satire. Keine medizinische oder behördliche Empfehlung.</p></div>';
+        main.append(button("Test starten", "button button-primary button-large", () => {
+          phase = "questions";
+          currentIndex = 0;
+          answers = [];
+          render();
+        }));
+        root.append(main);
+      }
+
+      function renderQuestion() {
+        const question = questions[currentIndex];
+        const main = document.createElement("main");
+        main.className = "screen question-screen";
+        main.innerHTML = `<header class="topbar"><div><span class="label">These ${currentIndex + 1} von ${questions.length}</span><h1>HANTA-O-MAT</h1></div></header><div class="progress"><span style="width:${((currentIndex + 1) / questions.length) * 100}%"></span></div><section class="thesis-panel"><p>${question.text}</p></section>`;
+        const back = button("Zurück", "button button-ghost compact", () => {
+          currentIndex = Math.max(0, currentIndex - 1);
+          render();
+        });
+        back.disabled = currentIndex === 0;
+        main.querySelector(".topbar").append(back);
+        const grid = document.createElement("div");
+        grid.className = "answer-grid";
+        [
+          ["Stimme zu", "agree", "button button-primary"],
+          ["Neutral", "neutral", "button button-secondary"],
+          ["Stimme nicht zu", "disagree", "button button-secondary"],
+          ["Überspringen", "skip", "button button-ghost"]
+        ].forEach(([label, answer, className]) => {
+          grid.append(button(label, className, () => {
+            answers[currentIndex] = answer;
+            if (currentIndex === questions.length - 1) phase = "results";
+            else currentIndex += 1;
+            render();
+          }));
+        });
+        main.append(grid);
+        root.append(main);
+      }
+
+      function triggerExplosion() {
+        const oldOverlay = document.querySelector(".explosion-overlay");
+        if (oldOverlay) oldOverlay.remove();
+
+        const overlay = document.createElement("div");
+        overlay.className = "explosion-overlay";
+        overlay.setAttribute("aria-hidden", "true");
+        overlay.innerHTML = '<div class="blast blast-one"></div><div class="blast blast-two"></div><div class="blast blast-three"></div><div class="screen-shock"></div><div class="ship-scene"><div class="ship"><span class="ship-cabin"></span><span class="ship-deck"></span><span class="ship-hull"></span></div><div class="boom-word">BOOM</div></div>';
+        document.body.append(overlay);
+        window.setTimeout(() => overlay.remove(), 2600);
+      }
+
+      function renderResults() {
+        const results = score();
+        const winner = results[0];
+        const topThree = results.slice(0, 3);
+        const main = document.createElement("main");
+        main.className = "screen result-screen";
+        main.innerHTML = `<section class="result-hero winner-animated" style="border-color:${winner.color}"><div class="winner-badge" style="background:${winner.color}">Top Ergebnis</div><span class="label">Auswertung</span><h1>Du bist ${winner.percent} % ${winner.name}</h1><p>${winner.description}</p></section><section class="results-layout"><div class="bars-panel"><h2>Balkenübersicht</h2><div class="bars">${results.map((team) => `<div class="bar-row"><div class="bar-meta"><span>${team.name}</span><strong>${team.percent} %</strong></div><div class="bar-track"><span style="width:${team.percent}%;background:${team.color}"></span></div></div>`).join("")}</div></div><aside class="top-panel"><h2>Top 3 Teams</h2>${topThree.map((team, index) => `<div class="rank-row"><span>${index + 1}</span><div><strong>${team.name}</strong><small>${team.percent} %</small></div></div>`).join("")}</aside></section><section class="scorecard-wrap"><div class="scorecard" id="scorecard"><div class="scorecard-head"><span>Mein Hantavirus-O-Mat Ergebnis</span><strong>Satire</strong></div><div class="scorecard-main"><p>Ich bin</p><h2>${winner.name}</h2><div class="score-number" style="color:${winner.color}">${winner.percent} %</div><p class="score-slogan">${winner.slogan}</p></div><div class="scorecard-top">${topThree.map((team, index) => `<div><span>${index + 1}. ${team.name}</span><strong>${team.percent} %</strong></div>`).join("")}</div></div></section><div class="result-reveal" aria-hidden="true"><div class="reveal-ring reveal-ring-one" style="border-color:${winner.color}"></div><div class="reveal-ring reveal-ring-two"></div><div class="reveal-card" style="border-color:${winner.color}"><span>Top Ergebnis</span><strong>${winner.name}</strong></div></div>`;
+        const actions = document.createElement("div");
+        actions.className = "action-row";
+        actions.append(button("Nochmal testen", "button button-secondary", () => {
+          phase = "start";
+          render();
+        }));
+        actions.append(button("Scorecard exportieren", "button button-primary", () => window.print()));
+        actions.append(button("Schiff sprengen", "button button-danger", triggerExplosion));
+        main.append(actions);
+        root.append(main);
+      }
+
+      render();
+    </script>
+  </body>
+</html>
+
